@@ -1,4 +1,4 @@
-# timelog — Endpoints
+# tlog — Endpoints
 
 Owner: Juan Desimoni
 Last updated: 2026-03-23

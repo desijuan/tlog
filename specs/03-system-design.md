@@ -1,4 +1,4 @@
-# timelog — System Design
+# tlog — System Design
 
 Owner: Juan Desimoni
 Last updated: 2026-03-22

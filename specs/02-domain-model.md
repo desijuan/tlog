@@ -1,4 +1,4 @@
-# timelog — Domain Model
+# tlog — Domain Model
 
 Owner: Juan Desimoni
 Last updated: 2026-03-23

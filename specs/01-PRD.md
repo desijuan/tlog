@@ -1,4 +1,4 @@
-# timelog — Product Requirements Document
+# tlog — Product Requirements Document
 
 Owner: Juan Desimoni
 Status: Draft

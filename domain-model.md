@@ -33,11 +33,12 @@ Represents the base identity for any authenticated actor in the system.
 
 #### Notes
 
-- All roles share this base table. Role membership is determined by presence in the corresponding
-  role table (`workers`, `supervisors`, `sysadmin`), not by a role field.
+- All roles share this base table.
+- Role membership is determined by presence in the corresponding role table
+  (`workers`, `supervisors`, `sysadmin`), not by a role field.
 - A user can have more than one role, except for the sysadmin. For example, a user can be both a
-  supervisor and a worker in another supervisor's team. The sysadmin is exclusive, it cannot have
-  aonther role.
+  supervisor and a worker in another supervisor's team.
+- The sysadmin is exclusive. The sysadmin user can only be sysadmin, nothing else.
 - At all times there must be exactly one sysadmin
 - For workers and supervisors, delete on the `users` row cascades to the role table. For sysadmin,
   delete is restricted (the sysadmin row must be removed first).
@@ -52,12 +53,11 @@ Extends User for employees who clock in and out.
 
 - user_id (INTEGER PRIMARY KEY, FK → users.id, CASCADE on delete)
 - working_schedule_id (FK → working_schedules.id, SET NULL on delete, nullable)
-- hired_at (INTEGER — Unix timestamp)
+- created_at (INTEGER — Unix timestamp)
 - is_active (INTEGER, default 1) — 0 means deactivated
 
 #### Notes
 
-- `WITHOUT ROWID` table (user_id is the sole key).
 - Deactivating a worker (is_active = 0) preserves all session history.
 - Only workers own work sessions.
 
@@ -70,11 +70,11 @@ Extends User for supervisors who manage workers and view reports.
 #### Fields (in `supervisors` table)
 
 - user_id (INTEGER PRIMARY KEY, FK → users.id, CASCADE on delete)
+- created_at (INTEGER — Unix timestamp)
 - is_active (INTEGER, default 1)
 
 #### Notes
 
-- `WITHOUT ROWID` table.
 - No session ownership.
 
 ---
@@ -109,7 +109,9 @@ Represents expected working hours, broken down by day of week.
 - id (INTEGER PRIMARY KEY)
 - name (TEXT, unique)
 - sunday ... saturday (TEXT, nullable) — each stores a time range string (e.g. "09:00-17:00")
-  or NULL for no work that day
+  or NULL for no work that day.
+- description (TEXT)
+- created_at (INTEGER — Unix timestamp)
 - is_active (INTEGER, default 1)
 
 #### Notes
@@ -161,6 +163,7 @@ Tracks modifications to work sessions for auditability.
 - previous_end_time (INTEGER, nullable)
 - new_start_time (INTEGER)
 - new_end_time (INTEGER, nullable)
+- note TEXT
 - edited_at (INTEGER)
 
 #### Notes
@@ -216,7 +219,7 @@ Roles are implemented as separate tables that reference `users.id`, rather than 
 - Role membership = presence of a row in the corresponding table
 - A user with no row in any role table has no permissions
 - Adding/removing an extension role = inserting/deleting a row (no schema migration needed)
-- Each role table can carry role-specific fields (e.g. `hired_at` on workers)
+- Each role table can carry role-specific fields (e.g. `created_at` on workers)
 
 ---
 

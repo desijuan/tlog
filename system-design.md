@@ -42,7 +42,7 @@ users           — base identity (name, email, pwd_hash)
 └── sysadmin    — sealed identity: user_id FK (exactly one row, always)
 ```
 
-All role tables are `WITHOUT ROWID`, using `user_id` as the primary key.
+All role tables use `user_id` as the primary key.
 
 **Workers and supervisors** are *extension roles* — they augment a base user with extra fields and permissions. They can be activated, deactivated, and their fields can evolve independently.
 
@@ -52,7 +52,6 @@ All role tables are `WITHOUT ROWID`, using `user_id` as the primary key.
 - Each role can carry its own fields without nulling out irrelevant columns on `users`
 - Role membership is explicit: row present = role held
 - Adding a new extension role requires a new table, not a schema change to `users`
-- `WITHOUT ROWID` avoids a redundant rowid for tables whose PK is already a single integer FK
 
 **Trade-off:** resolving a user's role requires checking up to three tables. For this system's scale, this is acceptable.
 

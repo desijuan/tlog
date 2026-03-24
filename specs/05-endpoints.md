@@ -49,11 +49,11 @@ database on every authenticated request.
 
 ### API `/api/`
 
-| Method | Path                        | Description                                                                                  |
-| ------ | ----                        | -----------                                                                                  |
-| POST   | `/api/auth/login`           | Receives email + password. Validates credentials. Responds with `Set-Cookie` (JWT HttpOnly). |
-| POST   | `/api/auth/logout`          | Clears the JWT cookie.                                                                       |
-| POST   | `/api/auth/change-password` | Receives current password + new password. Requires cookie.                                   |
+| Method | Path                        | Description                                                                                     |
+| ------ | ----                        | -----------                                                                                     |
+| POST   | `/api/auth/login`           | Receives username + password. Validates credentials. Responds with `Set-Cookie` (JWT HttpOnly). |
+| POST   | `/api/auth/logout`          | Clears the JWT cookie.                                                                          |
+| POST   | `/api/auth/change-password` | Receives current password + new password. Requires cookie.                                      |
 
 ---
 

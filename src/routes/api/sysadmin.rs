@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    routing::{delete, get, patch, post},
+    routing::{get, post},
 };
 
 pub fn router() -> Router {

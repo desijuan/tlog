@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tlog - Panel Empleado</title>
+    <link rel="stylesheet" href="/app/worker/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">Panel Empleado</div>
+        <div class="navbar-center" id="user-name"></div>
+        <div class="navbar-brand">tlog</div>
+    </nav>
+    <div class="board-container">
+        <!-- Columna izquierda: Menú -->
+        <div class="sidebar-left">
+            <h3>Menú</h3>
+            <div class="menu-item active">Mis Fichajes</div>
+            <div class="menu-item">Historial</div>
+            <div class="menu-item">Mi Perfil</div>
+            <div class="menu-item">Configuración</div>
+        </div>
+
+        <!-- Columna central: Últimos fichajes -->
+        <div class="main-content">
+            <h2>Últimos Fichajes</h2>
+
+            <!-- <div class="clock-entry"> -->
+            <!--     <div class="clock-entry-header"> -->
+            <!--         <span class="clock-entry-time">Entrada: 09:00</span> -->
+            <!--         <span class="clock-entry-time">Salida: 18:30</span> -->
+            <!--     </div> -->
+            <!--     <div class="clock-entry-date">Lunes, 20 de Enero de 2026</div> -->
+            <!-- </div> -->
+            <!---->
+            <!-- <div class="clock-entry"> -->
+            <!--     <div class="clock-entry-header"> -->
+            <!--         <span class="clock-entry-time">Entrada: 08:55</span> -->
+            <!--         <span class="clock-entry-time">Salida: 18:15</span> -->
+            <!--     </div> -->
+            <!--     <div class="clock-entry-date">Viernes, 17 de Enero de 2026</div> -->
+            <!-- </div> -->
+            <!---->
+            <!-- <div class="clock-entry"> -->
+            <!--     <div class="clock-entry-header"> -->
+            <!--         <span class="clock-entry-time">Entrada: 09:05</span> -->
+            <!--         <span class="clock-entry-time">Salida: 18:00</span> -->
+            <!--     </div> -->
+            <!--     <div class="clock-entry-date">Jueves, 16 de Enero de 2026</div> -->
+            <!-- </div> -->
+            <!---->
+            <!-- <div class="clock-entry"> -->
+            <!--     <div class="clock-entry-header"> -->
+            <!--         <span class="clock-entry-time">Entrada: 09:00</span> -->
+            <!--         <span class="clock-entry-time">Salida: 18:20</span> -->
+            <!--     </div> -->
+            <!--     <div class="clock-entry-date">Miércoles, 15 de Enero de 2026</div> -->
+            <!-- </div> -->
+
+        </div>
+
+        <!-- Columna derecha: Reloj y botón de fichar -->
+        <div class="sidebar-right">
+            <div class="clock-widget">
+                <div class="current-time">--:--</div>
+                <div class="current-date">--</div>
+            </div>
+            <button type="button" onclick="ficharBtnHandler()" class="fichar-button" id="fichar-btn">Fichar</button>
+        </div>
+    </div>
+
+    <script src="/app/worker/script.js"></script>
+</body>
+</html>

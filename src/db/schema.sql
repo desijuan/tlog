@@ -55,41 +55,6 @@ CREATE TABLE IF NOT EXISTS supervisors (
 );
 
 -- -----------------------------------------------------------------------------
--- Sealed identity — sysadmin - singleton, exclusive with worker/supervisor
--- -----------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS sysadmin (
-    user_id  INTEGER PRIMARY KEY,
-    only_one INTEGER NOT NULL DEFAULT 1 CHECK (only_one = 1) UNIQUE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
-);
-
--- Sysadmin exclusivity: cannot also be a worker or supervisor
-CREATE TRIGGER enforce_sysadmin_not_worker_or_supervisor
-BEFORE INSERT ON sysadmin
-WHEN EXISTS (SELECT 1 FROM workers     WHERE user_id = NEW.user_id)
-  OR EXISTS (SELECT 1 FROM supervisors WHERE user_id = NEW.user_id)
-BEGIN
-    SELECT RAISE(ABORT, 'Sysadmin user cannot also be a worker or supervisor');
-END;
-
--- Worker cannot be sysadmin
-CREATE TRIGGER enforce_worker_not_sysadmin
-BEFORE INSERT ON workers
-WHEN EXISTS (SELECT 1 FROM sysadmin WHERE user_id = NEW.user_id)
-BEGIN
-    SELECT RAISE(ABORT, 'Worker user cannot also be a sysadmin');
-END;
-
--- Supervisor cannot be sysadmin
-CREATE TRIGGER enforce_supervisor_not_sysadmin
-BEFORE INSERT ON supervisors
-WHEN EXISTS (SELECT 1 FROM sysadmin WHERE user_id = NEW.user_id)
-BEGIN
-    SELECT RAISE(ABORT, 'Supervisor user cannot also be a sysadmin');
-END;
-
--- -----------------------------------------------------------------------------
 -- Work sessions
 -- -----------------------------------------------------------------------------
 
@@ -105,13 +70,21 @@ CREATE TABLE IF NOT EXISTS work_sessions (
 
 -- A worker may have at most one open session at a time.
 -- Partial index: only rows where end_time IS NULL are covered.
-CREATE UNIQUE INDEX one_active_session_per_worker
+CREATE UNIQUE INDEX IF NOT EXISTS one_active_session_per_worker
     ON work_sessions (worker_id)
     WHERE end_time IS NULL;
 
--- Enforce start_time < end_time when end_time is provided, on both insert and update.
-CREATE TRIGGER enforce_session_time_order
-BEFORE INSERT OR UPDATE ON work_sessions
+-- Enforce start_time < end_time when end_time is provided on insert.
+CREATE TRIGGER IF NOT EXISTS enforce_session_time_order_insert
+BEFORE INSERT ON work_sessions
+WHEN NEW.end_time IS NOT NULL AND NEW.end_time <= NEW.start_time
+BEGIN
+    SELECT RAISE(ABORT, 'end_time must be greater than start_time');
+END;
+
+-- Enforce start_time < end_time when end_time is provided on update.
+CREATE TRIGGER IF NOT EXISTS enforce_session_time_order_update
+BEFORE UPDATE ON work_sessions
 WHEN NEW.end_time IS NOT NULL AND NEW.end_time <= NEW.start_time
 BEGIN
     SELECT RAISE(ABORT, 'end_time must be greater than start_time');
@@ -124,7 +97,7 @@ END;
 CREATE TABLE IF NOT EXISTS work_session_edits (
     id              INTEGER PRIMARY KEY,
     ws_id           INTEGER NOT NULL,  -- work_session_id
-    edited_by       INTEGER NOT NULL,  -- any user (worker, supervisor, sysadmin)
+    edited_by       INTEGER NOT NULL,  -- any user (worker or supervisor)
     prev_start_time INTEGER NOT NULL,
     prev_end_time   INTEGER,
     new_start_time  INTEGER NOT NULL,

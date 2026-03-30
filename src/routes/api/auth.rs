@@ -1,6 +1,7 @@
+use crate::db::DB;
 use axum::{Router, routing::post};
 
-pub fn router() -> Router<()> {
+pub fn router() -> Router<DB> {
     Router::new()
         .route("/login", post(auth_login))
         .route("/logout", post(auth_logout))

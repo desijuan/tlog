@@ -1,9 +1,10 @@
+use crate::db::DB;
 use axum::{
     Router,
     routing::{get, patch, post},
 };
 
-pub fn router() -> Router {
+pub fn router() -> Router<DB> {
     Router::new()
         .route("/me", get(get_me))
         .route("/sessions", get(get_sessions))

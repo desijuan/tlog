@@ -1,3 +1,4 @@
+use crate::db::DB;
 use axum::Router;
 
 mod auth;
@@ -5,7 +6,7 @@ mod supervisor;
 mod sysadmin;
 mod worker;
 
-pub fn router() -> Router {
+pub fn router() -> Router<DB> {
     Router::new()
         .nest("/auth", auth::router())
         .nest("/worker", worker::router())

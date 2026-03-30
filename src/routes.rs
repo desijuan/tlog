@@ -1,4 +1,4 @@
-use crate::jwt;
+use crate::{db::DB, jwt};
 use axum::{
     Router,
     extract::Request,
@@ -12,18 +12,19 @@ use tower_http::cors::{Any, CorsLayer};
 mod api;
 mod app;
 
-pub fn router() -> Router {
+pub fn app_router(db: DB) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
         .allow_headers(Any);
 
-    Router::new()
+    Router::<DB>::new()
         .route("/", get(home))
         .nest("/api", api::router())
         .nest("/app", app::router())
         .layer(middleware::from_fn(log_request))
         .layer(cors)
+        .with_state(db)
 }
 
 async fn log_request(request: Request, next: Next) -> Response {

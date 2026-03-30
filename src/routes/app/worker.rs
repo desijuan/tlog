@@ -1,11 +1,12 @@
 use super::resources;
+use crate::db::DB;
 use axum::{
     Router, http,
     response::{Html, IntoResponse},
     routing::get,
 };
 
-pub fn router() -> Router<()> {
+pub fn router() -> Router<DB> {
     Router::new()
         .route("/", get(get_html))
         .route("/styles.css", get(get_css))

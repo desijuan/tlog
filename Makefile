@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := run
+.DEFAULT_GOAL := debug
 
 BIN := tlog
 RELEASE_BIN := target/release/$(BIN)

@@ -1,3 +1,4 @@
+use crate::db::DB;
 use axum::Router;
 
 mod change_password;
@@ -7,7 +8,7 @@ mod supervisor;
 mod sysadmin;
 mod worker;
 
-pub fn router() -> Router {
+pub fn router() -> Router<DB> {
     Router::new()
         .nest("/login", login::router())
         .nest("/change-password", change_password::router())
